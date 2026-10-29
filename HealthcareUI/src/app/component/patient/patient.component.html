@@ -1,0 +1,414 @@
+
+<div class="health-app">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand-icon">+</div>
+    <div class="header-text">
+      <h1>Health Prediction</h1>
+      <p>Patient Management Dashboard</p>
+    </div>
+    <div class="header-badge">
+      <span class="status-dot"></span>
+      AI Powered
+    </div>
+  </header>
+
+  <!-- NOTIFICATIONS -->
+  <div *ngIf="message" class="alert alert-success">
+    <span>✓</span> {{ message }}
+  </div>
+
+  <div *ngIf="errormessage" class="alert alert-error">
+    <span>!</span> {{ errormessage }}
+  </div>
+
+  <div *ngIf="errorKeys?.length" class="validation-summary">
+    <strong>Please correct the following errors:</strong>
+    <div *ngFor="let key of errorKeys">
+      {{ key }}: {{ errors[key][0] }}
+    </div>
+  </div>
+
+  <!-- PATIENT FORM -->
+  <section class="panel form-panel">
+    <div class="section-heading">
+      <div>
+        <h2>Patient Information</h2>
+        <p>Enter patient details and blood test results</p>
+      </div>
+      <span class="section-icon">01</span>
+    </div>
+
+    <form #contactForm="ngForm" class="patient-form">
+      <div class="form-field">
+        <label for="full_name">Full Name</label>
+        <input
+          id="full_name"
+          name="full_name"
+          [(ngModel)]="patient.full_name"
+          placeholder="Enter full name"
+          required
+          #fullName="ngModel"
+        />
+        <small class="field-error"
+          *ngIf="fullName.invalid && fullName.touched">
+          Full name is required.
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="dob">Date of Birth</label>
+        <input
+          id="dob"
+          name="dob"
+          [(ngModel)]="patient.dob"
+          type="date"
+          required
+          #dob="ngModel"
+          [max]="today"
+        />
+        <small class="field-error"
+          *ngIf="dob.invalid && dob.touched">
+          Enter a valid date of birth.
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          name="email"
+          [(ngModel)]="patient.email"
+          type="email"
+          placeholder="name@example.com"
+          required
+          pattern="^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+          #email="ngModel"
+        />
+        <small class="field-error"
+          *ngIf="email.invalid && email.touched">
+          <span *ngIf="email.errors?.['required']">
+            Email is required.
+          </span>
+          <span *ngIf="email.errors?.['pattern']">
+            Enter a valid email address.
+          </span>
+        </small>
+      </div>
+
+      <!-- <div class="form-field">
+        <label for="glucose">Glucose</label>
+        <div class="input-unit">
+          <input
+            id="glucose"
+            name="glucose"
+            [(ngModel)]="patient.glucose"
+            type="number"
+            min="0"
+            placeholder="e.g. 95"
+            required
+            #glucose="ngModel"
+          />
+          <span>mg/dL*</span>
+          
+        </div>
+        <span *ngIf="glucose.errors?.['required']">
+  Glucose is required.
+</span>
+      </div>
+
+      <div class="form-field">
+        <label for="haemoglobin">Haemoglobin</label>
+        <div class="input-unit">
+          <input
+            id="haemoglobin"
+            name="haemoglobin"
+            [(ngModel)]="patient.haemoglobin"
+            type="number"
+            min="0"
+            step="any"
+            placeholder="e.g. 13.5"
+            required
+            #hb="ngModel"
+          />
+          <span>g/dL*</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="cholesterol">Cholesterol</label>
+        <div class="input-unit">
+          <input
+            id="cholesterol"
+            name="cholesterol"
+            [(ngModel)]="patient.cholesterol"
+            type="number"
+            min="0"
+            placeholder="e.g. 180"
+            required
+            #chol="ngModel"
+          />
+          <span>mg/dL*</span>
+        </div>
+      </div> -->
+
+      
+<div class="form-field">
+  <label for="glucose">Glucose</label>
+  <div class="input-unit">
+    <input
+      id="glucose"
+      name="glucose"
+      [(ngModel)]="patient.glucose"
+      type="number"
+      min="0"
+      placeholder="e.g. 95"
+      required
+      #glucose="ngModel"
+    />
+    <span>mg/dL*</span>
+  </div>
+  <span *ngIf="glucose.errors?.['required'] && glucose.touched"
+        style="color: red;">
+    Glucose is required.
+  </span>
+</div>
+
+<div class="form-field">
+  <label for="haemoglobin">Haemoglobin</label>
+  <div class="input-unit">
+    <input
+      id="haemoglobin"
+      name="haemoglobin"
+      [(ngModel)]="patient.haemoglobin"
+      type="number"
+      min="0"
+      step="any"
+      placeholder="e.g. 13.5"
+      required
+      #hb="ngModel"
+    />
+    <span>g/dL*</span>
+  </div>
+  <span *ngIf="hb.errors?.['required'] && hb.touched"
+        style="color: red;">
+    Haemoglobin is required.
+  </span>
+</div>
+
+<div class="form-field">
+  <label for="cholesterol">Cholesterol</label>
+  <div class="input-unit">
+    <input
+      id="cholesterol"
+      name="cholesterol"
+      [(ngModel)]="patient.cholesterol"
+      type="number"
+      min="0"
+      placeholder="e.g. 180"
+      required
+      #chol="ngModel"
+    />
+    <span>mg/dL*</span>
+  </div>
+  <span *ngIf="chol.errors?.['required'] && chol.touched"
+        style="color: red;">
+    Cholesterol is required.
+  </span>
+</div>
+
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="contactForm.invalid"
+          (click)="createPatient()">
+          + Create Patient
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-update"
+          [disabled]="contactForm.invalid"
+          (click)="updatePatient()">
+          Update Record
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="resetForm()">
+          Clear Form
+        </button>
+      </div>
+    </form>
+
+    
+  </section>
+
+  <!-- PATIENT RECORDS -->
+  <section class="panel records-panel">
+    <div class="section-heading records-heading">
+      <div>
+        <h2>Patient Records</h2>
+        <p>View and manage saved patient information</p>
+      </div>
+      <span class="record-label">
+        {{ patients.length }} Records
+      </span>
+    </div>
+
+    <div class="table-scroll">
+      <table class="patient-table">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Email Address</th>
+            <th>Glucose</th>
+            <th>Hb</th>
+            <th>Cholesterol</th>
+            <th>AI Remarks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let p of patients">
+            <td class="patient-name">{{ p.full_name }}</td>
+            <td class="email-cell">{{ p.email }}</td>
+            <td>{{ p.glucose }}</td>
+            <td>{{ p.haemoglobin }}</td>
+            <td>{{ p.cholesterol }}</td>
+            <td class="remarks-cell">{{ p.remarks }}</td>
+
+            <td>
+              <div class="action-buttons">
+                <button
+                  type="button"
+                  class="btn-action edit-btn"
+                  (click)="edit(p)">
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-action delete-btn"
+                  (click)="delete(p.id)">
+                  Delete
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-action view-btn"
+                  (click)="viewPatient(p.id)">
+                  View
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="patients.length === 0">
+            <td colspan="7" class="empty-state">
+              <div class="empty-icon">▤</div>
+              <strong>No patient records found</strong>
+              <p>Add a patient using the form above.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PATIENT DETAILS MODAL -->
+  <div
+    class="popup-overlay"
+    *ngIf="showPopup"
+    (click)="closePopup()">
+
+    <div
+      class="popup-box"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="patient-modal-title"
+      (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div>
+          <h3 id="patient-modal-title">Patient Details</h3>
+          <p>Patient information and AI-generated remarks</p>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close"
+          aria-label="Close"
+          (click)="closePopup()">
+          &times;
+        </button>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span>Full Name</span>
+          <strong>{{ selectedPatient?.full_name }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Date of Birth</span>
+          <strong>{{ selectedPatient?.dob }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Email Address</span>
+          <strong>{{ selectedPatient?.email }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Glucose</span>
+          <strong>{{ selectedPatient?.glucose }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Haemoglobin</span>
+          <strong>{{ selectedPatient?.haemoglobin }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Cholesterol</span>
+          <strong>{{ selectedPatient?.cholesterol }}</strong>
+        </div>
+      </div>
+
+      <div class="ai-remarks">
+        <h4>AI-Generated Remarks</h4>
+        <p>{{ selectedPatient?.remarks }}</p>
+        <small>
+          Informational only. Not a medical diagnosis.
+        </small>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary modal-done"
+        (click)="closePopup()">
+        Close Details
+      </button>
+    </div>
+  </div>
+
+  <!-- SUCCESS / ERROR TOAST -->
+  <div
+    class="toast"
+    *ngIf="showPopupD"
+    [ngClass]="popupType"
+    role="status">
+    {{ popupMessage }}
+  </div>
+
+  <!-- LOADER -->
+  <div class="loader-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Processing your request...</p>
+  </div>
+</div>
